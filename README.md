@@ -1,23 +1,26 @@
 # postbucket
 An open source alternative to services such as formspree or usebasin
 
-Todos for this application:
+### Todo's
+- [ ] Setup Controller
+- [ ] Implement logic to catch "from site" and "recipient"
+- [ ] Set up Entity Framework with MySql
+- [ ] Send out SMS / Email notifications on submission.
 
-[ ] Create the service
-[ ] Connect the app to myqsql service.
-[ ] Look at connecting an email notification service such as Mailgun or AWS SES.
-[ ] 
+### Features to look at later
+- [ ] Create a user interface to sign up and log in to the system.
+- [ ] Create a dashboard to view all the form submissions that have been made.
+- [ ] Create a donations page.
 
-### Setup requirements
-- Dotnet Core SDK 2.1+
-
-> Setup:
-> `npm install`
-> `npm run build`
-> `npm run start`
+## Setup
+```sh
+$ npm install
+$ npm run build
+$ npm run start
+```
 
 
 ## Contributors:
 
-@caybokotze
-@itsjessicajane
+[@caybokotze](https://github.com/caybokotze)
+[@itsjessicajane](https://github.com/itsjessicajane)
