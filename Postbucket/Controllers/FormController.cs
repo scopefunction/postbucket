@@ -20,10 +20,10 @@ namespace Postbucket.Controllers
             {
                 var key = keyValuePair.Key;
                 var value = keyValuePair.Value;
-                form.SubmissionValues.Add(key, value);
+                form.AddToSubmissions(key, value);
             }
 
-            var json = form.SubmissionValues.Serialize();
+            var json = form.Return().Serialize();
 
             var data = new FormData()
             {
