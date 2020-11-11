@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Postbucket.BLL.Extensions;
 using Postbucket.Models;
 
 namespace Postbucket.Controllers
@@ -21,6 +22,19 @@ namespace Postbucket.Controllers
                 var value = keyValuePair.Value;
                 form.SubmissionValues.Add(key, value);
             }
+
+            var json = form.SubmissionValues.Serialize();
+
+            var data = new FormData()
+            {
+                SerializedData = json,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            
+            var context = new Context();
+            context.FormData.Add(data);
+            context.SaveChanges();
 
             return StatusCode(200);
         }
