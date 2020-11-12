@@ -1,10 +1,14 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using Postbucket.Models;
 
 namespace Postbucket
 {
     public class Context : DbContext
     {
-        public DbSet<FormData> FormData { get; set; }
+        public Context(DbContextOptions<Context> options)
+        {
+            
+        }
+        public System.Data.Entity.DbSet<FormData> FormData { get; set; }
     }
 }
