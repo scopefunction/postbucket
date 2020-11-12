@@ -1,6 +1,11 @@
 ﻿using System;
+using System.ComponentModel.Design;
+using System.Data.Entity;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Postbucket.BLL;
 using Postbucket.BLL.Extensions;
 using Postbucket.Models;
 
@@ -15,6 +20,11 @@ namespace Postbucket.Controllers
         public FormController(Context context)
         {
             _context = context;
+        }
+
+        public void ManualInjection()
+        {
+            var context = Resolver.Get<DbContext>();
         }
         
         [HttpPost]
