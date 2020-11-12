@@ -2,7 +2,7 @@
 > Postbucket is a open source alternative to services like formspree, usebasin, etc. You can set this project up as a means to accept form data from static sites.
 
 ### Todo's
-- [ ] Setup Controller
+- [x] Setup Controller
 - [ ] Implement logic to catch "from site" and "recipient"
 - [ ] Set up Entity Framework with MySql
 - [ ] Send out SMS / Email notifications on submission.
