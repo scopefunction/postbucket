@@ -10,6 +10,13 @@ namespace Postbucket.Controllers
     [Route("form")]
     public class FormController : Controller
     {
+        private readonly Context _context;
+
+        public FormController(Context context)
+        {
+            _context = context;
+        }
+        
         [HttpPost]
         [Route("")]
         public IActionResult PostForm(IFormCollection collection)
@@ -32,9 +39,8 @@ namespace Postbucket.Controllers
                 UpdatedAt = DateTime.Now
             };
             
-            var context = new Context();
-            context.FormData.Add(data);
-            context.SaveChanges();
+            _context.FormData.Add(data);
+            _context.SaveChanges();
 
             return StatusCode(200);
         }
