@@ -22,15 +22,12 @@ namespace Postbucket.Controllers
             _context = context;
         }
 
-        public void ManualInjection()
-        {
-            var context = Resolver.Get<DbContext>();
-        }
-        
         [HttpPost]
         [Route("")]
         public IActionResult PostForm(IFormCollection collection)
         {
+            var path = HttpContext.Request.Path;
+            //
             var form = new FormSubmission();
 
             foreach (var keyValuePair in collection)
@@ -49,10 +46,12 @@ namespace Postbucket.Controllers
                 UpdatedAt = DateTime.Now
             };
             
-            _context.FormData.Add(data);
-            _context.SaveChanges();
+            // _context.FormData.Add(data);
+            // _context.SaveChanges();
+            
+            EmailRecipient.SendEmail(form.Return());
 
-            return StatusCode(200);
+            return Redirect("https://google.com");
         }
 
         [HttpGet]
