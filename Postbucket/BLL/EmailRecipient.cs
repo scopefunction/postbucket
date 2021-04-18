@@ -19,6 +19,8 @@ namespace Postbucket.BLL
                 if (innerException != null) throw innerException;
             }
 
+            if (form == null) return;
+            
             form.Remove("recipient");
 
             string emailValues = "";
@@ -27,7 +29,7 @@ namespace Postbucket.BLL
             {
                 emailValues += $"{value.Key} {value.Value}";
             }
-            
+
             EmailService.Send(emailValues, recipient);
         }
     }

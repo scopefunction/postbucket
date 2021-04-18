@@ -15,6 +15,11 @@ namespace Postbucket.Models
             _submissionValues.Add(key, value);
         }
 
+        public void Remove(string key)
+        {
+            _submissionValues.Remove(key);
+        }
+
         public Dictionary<string, string> Return()
         {
             return _submissionValues;

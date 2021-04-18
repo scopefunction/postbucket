@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Postbucket.BLL;
 using Postbucket.BLL.Extensions;
 using Postbucket.Models;
@@ -27,17 +28,33 @@ namespace Postbucket.Controllers
         public IActionResult PostForm(IFormCollection collection)
         {
             var path = HttpContext.Request.Path;
-            //
+            
             var form = new FormSubmission();
+            
+            var sender = collection
+                .TryGetValue("sender", out var senderValue);
 
+            var redirect = collection.TryGetValue("redirect", out var redirectValue);
+
+            if (!sender||!redirect)
+            {
+                return new BadRequestResult();
+            }
+            
             foreach (var keyValuePair in collection)
             {
                 var key = keyValuePair.Key;
                 var value = keyValuePair.Value;
                 form.AddToSubmissions(key, value);
             }
-
-            var json = form.Return().Serialize();
+            
+            form.Remove("sender");
+            form.Remove("redirect");
+            
+            var json = form.Return()
+                .Serialize();
+            
+            EmailService.Send(json, senderValue);
 
             var data = new FormData()
             {
@@ -45,13 +62,8 @@ namespace Postbucket.Controllers
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
-            
-            // _context.FormData.Add(data);
-            // _context.SaveChanges();
-            
-            EmailRecipient.SendEmail(form.Return());
 
-            return Redirect("https://google.com");
+            return Redirect(redirectValue);
         }
 
         [HttpGet]
@@ -61,5 +73,4 @@ namespace Postbucket.Controllers
             return Content("This app works.");
         }
     }
-
 }
