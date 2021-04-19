@@ -31,12 +31,12 @@ namespace Postbucket.Controllers
             
             var form = new FormSubmission();
             
-            var sender = collection
-                .TryGetValue("sender", out var senderValue);
+            var recipient = collection
+                .TryGetValue("recipient", out var recipientValue);
 
             var redirect = collection.TryGetValue("redirect", out var redirectValue);
 
-            if (!sender||!redirect)
+            if (!recipient||!redirect)
             {
                 return new BadRequestResult();
             }
@@ -48,13 +48,13 @@ namespace Postbucket.Controllers
                 form.AddToSubmissions(key, value);
             }
             
-            form.Remove("sender");
+            form.Remove("recipient");
             form.Remove("redirect");
             
             var json = form.Return()
                 .Serialize();
             
-            EmailService.Send(json, senderValue);
+            EmailService.Send(json, recipientValue);
 
             var data = new FormData()
             {
