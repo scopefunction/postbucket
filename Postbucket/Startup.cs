@@ -30,10 +30,9 @@ namespace Postbucket
                 options.AddPolicy(name: "AllowAll",
                     builder =>
                     {
-                        builder.SetIsOriginAllowed(origin => true);
+                        builder.AllowAnyOrigin();
                         builder.AllowAnyMethod();
                         builder.AllowAnyHeader();
-                        builder.AllowCredentials();
                     });
             });
         }
