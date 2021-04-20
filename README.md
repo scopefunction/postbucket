@@ -20,5 +20,5 @@ $ npm run start
 ```
 
 ### Contributors
-[@itsjessicajane](https://github.com/itsjessicajane)
+[@itsjessicajane](https://github.com/scifae)
 [@caybokotze](https://github.com/caybokotze)
