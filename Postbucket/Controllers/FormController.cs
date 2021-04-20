@@ -67,10 +67,10 @@ namespace Postbucket.Controllers
         }
 
         [HttpGet]
-        [Route("test")]
-        public IActionResult Test()
+        [Route("")]
+        public IActionResult HttpGet()
         {
-            return Content("This app works.");
+            return Content("Postbucket");
         }
     }
 }

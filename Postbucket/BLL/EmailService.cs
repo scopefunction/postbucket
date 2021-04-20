@@ -36,6 +36,5 @@ namespace Postbucket.BLL
             request.Method = Method.POST;
             return client.Execute (request);
         }
-        
     }
 }
