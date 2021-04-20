@@ -24,6 +24,18 @@ namespace Postbucket
                 options => options
                     .UseMySQL(Configuration
                         .GetConnectionString("MySql")));
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AllowAll",
+                    builder =>
+                    {
+                        builder.SetIsOriginAllowed(origin => true);
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                        builder.AllowCredentials();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,14 +57,11 @@ namespace Postbucket
 
             app.UseRouting();
 
+            app.UseCors("AllowAll");
+
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
