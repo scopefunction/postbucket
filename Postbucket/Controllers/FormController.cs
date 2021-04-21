@@ -13,7 +13,7 @@ using Postbucket.Models;
 namespace Postbucket.Controllers
 {
     [Controller]
-    [Route("form")]
+    [Route("/form")]
     public class FormController : Controller
     {
         private readonly Context _context;
