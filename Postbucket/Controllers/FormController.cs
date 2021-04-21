@@ -68,9 +68,10 @@ namespace Postbucket.Controllers
 
         [HttpGet]
         [Route("")]
-        public IActionResult HttpGet()
+        public void HttpGet()
         {
-            return Content("Postbucket");
+            HttpContext.Response.ContentType = "text/html";
+            HttpContext.Response.WriteAsync("<html><h1>Postbucket</h1></html>");
         }
     }
 }
