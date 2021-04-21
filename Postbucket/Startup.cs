@@ -52,7 +52,7 @@ namespace Postbucket
             }
 
             // app.UseHttpsRedirection();
-            // app.UseStaticFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -60,7 +60,12 @@ namespace Postbucket
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+            app.UseEndpoints(endpoint =>
+            {
+                endpoint.MapControllerRoute(
+                    "default",
+                    "{controller=Default}/{action=Default}/{id?}");
+            });
         }
     }
 }
