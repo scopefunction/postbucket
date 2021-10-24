@@ -13,14 +13,14 @@ namespace Postbucket.BLL
             return (T)provider.GetService(typeof(T));
         }
 
-        static IServiceProvider ConfigureContainer()
+        private static IServiceProvider ConfigureContainer()
         {
             var services = new ServiceCollection();
             ConfigureServices(services);
             return services.BuildServiceProvider();
         }
 
-        static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<DbContext>();
         }

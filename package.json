@@ -1,0 +1,19 @@
+{
+    "name":"Postbucket",
+    "version":"1.0.0",
+    "author": {
+        "name":"Caybo Kotze",
+        "email": "caybokotze@gmail.com",
+        "url": "https://github.com/caybokotze"
+    },
+    "scripts":{
+        "stage":"sudo git clean -xdf && sudo git fetch && sudo git merge origin/main && sudo dotnet publish --configuration Release",
+        "poststage":"npm run refresh-nginx && npm run refresh-postbucket-service",
+        "refresh-nginx":"sudo systemctl restart nginx && sudo nginx -t && sudo systemctl status nginx",
+        "refresh-postbucket-service":"sudo systemctl restart postbucket.mergedigital.service && sudo systemctl status postbucket.mergedigital.service"
+    },
+    "repository": {
+        "type": "github.com",
+        "url": "https://github.com/caybokotze/postbucket"
+    }
+}

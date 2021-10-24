@@ -19,6 +19,9 @@ $ npm run build
 $ npm run start
 ```
 
+## Environment Variables Required
+`EMAIL_PASSWORD=` 
+
 ### Contributors
-[@itsjessicajane](https://github.com/itsjessicajane)
+[@itsjessicajane](https://github.com/scifae)
 [@caybokotze](https://github.com/caybokotze)
