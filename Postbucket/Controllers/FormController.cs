@@ -1,11 +1,6 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Data.Entity;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
 using Postbucket.BLL;
 using Postbucket.BLL.Extensions;
 using Postbucket.Models;
