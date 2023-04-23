@@ -33,12 +33,14 @@ public class EmailService : IEmailService
     {
         var apiKey = _appSettings.SendGridAccessKey;
         var client = new SendGridClient(apiKey);
-        var from = new EmailAddress("mail@mergedigital.io", "Postbucket");
+        var from = new EmailAddress("team@mail.mergedigital.io", "Postbucket");
         var to = new EmailAddress(emailPayload.Recipient, emailPayload.Title);
 
         var template = await GetTemplate(emailPayload);
         
         var msg = MailHelper.CreateSingleEmail(from, to, emailPayload.Subject, null, template);
+        msg.ReplyTo = new EmailAddress("info@mergedigital.io", "Merge Digital");
+        
         var response = await client.SendEmailAsync(msg);
 
         if (!response.IsSuccessStatusCode)
