@@ -1,72 +1,94 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Postbucket.BLL;
-using Postbucket.BLL.Extensions;
-using Postbucket.Models;
+using Postbucket.DTO;
+using Postbucket.Services;
 
-namespace Postbucket.Controllers
+namespace Postbucket.Controllers;
+
+[Controller]
+[Route("/submit")]
+public class FormController : Controller
 {
-    [Controller]
-    [Route("/form")]
-    public class FormController : Controller
+    private readonly IConfiguration _configuration;
+    private readonly IDocumentService _documentService;
+    private readonly IEmailService _emailService;
+
+    public FormController(IConfiguration configuration, IDocumentService documentService, IEmailService emailService)
     {
-        private readonly Context _context;
+        _configuration = configuration;
+        _documentService = documentService;
+        _emailService = emailService;
+    }
 
-        public FormController(Context context)
+    [HttpPost]
+    [Route("")]
+    public async Task<IActionResult> PostForm(
+        [FromForm] IFormCollection collection, 
+        [FromBody] Dictionary<string, string> fields,
+        [FromQuery] string? formId, 
+        [FromQuery] string? redirect)
+    {
+        var validatedForm = await _documentService.ValidateFormId(formId);
+        
+        if (!validatedForm.IsValid || validatedForm.Form is null)
         {
-            _context = context;
+            return Unauthorized("Invalid form Id provided");
         }
 
-        [HttpPost]
-        [Route("")]
-        public IActionResult PostForm(IFormCollection collection)
+        switch (collection.Count)
         {
-            var path = HttpContext.Request.Path;
-            
-            var form = new FormSubmission();
-            
-            var recipient = collection
-                .TryGetValue("recipient", out var recipientValue);
-
-            var redirect = collection.TryGetValue("redirect", out var redirectValue);
-
-            if (!recipient||!redirect)
-            {
-                return new BadRequestResult();
-            }
-            
-            foreach (var keyValuePair in collection)
-            {
-                var key = keyValuePair.Key;
-                var value = keyValuePair.Value;
-                form.AddToSubmissions(key, value);
-            }
-            
-            form.Remove("recipient");
-            form.Remove("redirect");
-            
-            var json = form.Return()
-                .Serialize();
-            
-            EmailService.Send(json, recipientValue);
-
-            var data = new FormData()
-            {
-                SerializedData = json,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-
-            return Redirect(redirectValue);
+            case 0 when fields.Count == 0:
+                return BadRequest("No form collection data or json object data was received");
+            case > 0:
+                HandleFormRequest(collection, validatedForm.Form);
+                break;
         }
 
-        [HttpGet]
-        [Route("")]
-        public void HttpGet()
+        if (fields.Count > 0)
         {
-            HttpContext.Response.ContentType = "text/html";
-            HttpContext.Response.WriteAsync("<html><h1>Postbucket</h1></html>");
+            HandleBodyRequest(fields, validatedForm.Form);
         }
+
+        return Ok();
+    }
+
+    private void HandleFormRequest(IFormCollection formCollection, FormEntity formEntity)
+    {
+        var fields = new Dictionary<string, string>();
+        
+        foreach (var key in formCollection.Keys)
+        {
+            formCollection.TryGetValue(key, out var value);
+            fields.Add(key, value);
+        }
+
+        _emailService.Send(new EmailPayload
+        {
+            Subject = $"A new submission from {formEntity.Title}",
+            Recipient = formEntity.Email,
+            Fields = fields
+        });
+    }
+
+    private void HandleBodyRequest(Dictionary<string, string> fields, FormEntity formEntity)
+    {
+        _emailService.Send(new EmailPayload
+        {
+            Subject = $"A new submission from {formEntity.Title}",
+            Recipient = formEntity.Email,
+            Fields = fields
+        });
+    }
+    
+    [HttpGet]
+    [Route("")]
+    public void HttpGet()
+    {
+        HttpContext.Response.ContentType = "text/html";
+        HttpContext.Response.WriteAsync("<html><h1>Postbucket</h1></html>");
     }
 }

@@ -1,43 +1,51 @@
 using System;
-using System.Net;
-using System.Net.Mail;
-using RestSharp;
-using RestSharp.Authenticators;
+using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Configuration;
+using Postbucket.DTO;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 
-namespace Postbucket.BLL
+namespace Postbucket.BLL;
+
+public interface IEmailService
 {
-    public class EmailService
-    {
-        public static void Send(string body, string recipient)
-        {
-            var client = new SmtpClient("smtp.hostinger.com", 587)
-            {
-                Credentials = new NetworkCredential("info@merge.africa", Environment.GetEnvironmentVariable("EMAIL_PASSWORD")),
-                EnableSsl = false
-            };
-            
-            client.Send("info@merge.africa", recipient, "New Form Submission", body);
-        }
-     
-        public static IRestResponse SendSimpleEmail(string body, string recipient)
-        {
-            var client = new RestClient
-            {
-                BaseUrl = new Uri("https://api.mailgun.net/v3/sandbox9c2e9e7b1d7843da86746125faf83950.mailgun.org"),
-                Authenticator = new HttpBasicAuthenticator("api",
-                    Environment.GetEnvironmentVariable("MAILGUN_API_KEY") ?? string.Empty)
-            };
+    Task Send(EmailPayload emailPayload);
+}
 
-            var request = new RestRequest ();
-            request.AddParameter ("domain", "mail.merge.africa", ParameterType.UrlSegment);
-            request.Resource = "{domain}/messages";
-            request.AddParameter ("from", "Excited User <mailgun@mail@merge.africa>");
-            request.AddParameter ("to", recipient);
-            request.AddParameter ("subject", "Hello");
-            request.AddParameter ("text", body);
-            request.Method = Method.POST;
-            return client.Execute (request);
-        }
+public class EmailService : IEmailService
+{
+    private readonly IConfiguration _configuration;
+    private readonly AppSettings _appSettings;
+
+    public EmailService(IConfiguration configuration,
+        AppSettings appSettings)
+    {
+        _configuration = configuration;
+        _appSettings = appSettings;
+    }
+    
+    public async Task Send(EmailPayload emailPayload)
+    {
+        var apiKey = Environment.GetEnvironmentVariable("POSTBUCKET_SENDGRID_KEY");
+        var client = new SendGridClient(apiKey);
+        var from = new EmailAddress("mail@mergedigital.io", "Merge Digital");
+        var subject = "Sending with SendGrid is Fun";
+        var to = new EmailAddress("mail@mergedigital.io", "Merge Digital");
+        var plainTextContent = "and easy to do anywhere, even with C#";
+        var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+        var response = await client.SendEmailAsync(msg);
+    }
+
+    private async Task<string> GetTemplate()
+    {
+        var blobServiceClient = new BlobServiceClient(_appSettings.BlobStorageConnectionString);
+        var containerClient = blobServiceClient.GetBlobContainerClient("templates");
+        var blobClient = containerClient.GetBlobClient("primary-template.html");
+        var file = await blobClient.DownloadContentAsync();
+        var templateBinary = file.Value.Content;
+        return "";
     }
 }
