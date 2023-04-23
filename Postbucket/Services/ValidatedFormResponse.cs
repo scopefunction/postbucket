@@ -1,7 +1,9 @@
-﻿namespace Postbucket.Services;
+﻿using Postbucket.Models;
+
+namespace Postbucket.Services;
 
 public class ValidatedFormResponse
 {
-    public FormEntity? Form { get; set; }
+    public FormContext? Form { get; set; }
     public bool IsValid { get; set; }
 }

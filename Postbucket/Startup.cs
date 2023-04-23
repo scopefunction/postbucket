@@ -55,7 +55,8 @@ public class Startup
             BlobStorageConnectionString = Configuration["Blob:ConnectionString"].Replace("{BLOB_KEY}",
                 Environment.GetEnvironmentVariable(EnvironmentConstants.Blob)),
             CosmosConnectionString = Configuration["Cosmos:ConnectionString"].Replace("{COSMOS_DB_KEY}",
-                Environment.GetEnvironmentVariable(EnvironmentConstants.Cosmos))
+                Environment.GetEnvironmentVariable(EnvironmentConstants.Cosmos)),
+            FromEmail = Configuration["Sender:Email"]
         });
     }
 

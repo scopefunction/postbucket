@@ -11,5 +11,7 @@ public class EmailPayload
     
     public string? Subject { get; set; }
     public string? Recipient { get; set; }
+    public string? Website { get; set; }
+    public string? Title { get; set; }
     public Dictionary<string, string> Fields { get; set; }
 }

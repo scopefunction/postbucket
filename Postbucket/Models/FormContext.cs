@@ -1,6 +1,6 @@
-﻿namespace Postbucket.Services;
+﻿namespace Postbucket.Models;
 
-public class FormEntity
+public class FormContext
 {
     public string? Id { get; set; }
     public string? Title { get; set; }
