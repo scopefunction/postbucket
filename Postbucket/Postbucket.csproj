@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Azure.Data.Tables" Version="12.8.0" />
       <PackageReference Include="Azure.Storage.Blobs" Version="12.16.0" />
       <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
       <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.32.3" />
