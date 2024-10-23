@@ -43,19 +43,17 @@ public class Startup
                 });
         });
 
-        services.AddSingleton(_ => new CosmosClient(Configuration["Cosmos:ConnectionString"]
-            .Replace("{COSMOS_DB_KEY}",
-                Environment.GetEnvironmentVariable(EnvironmentConstants.Cosmos))));
+        // services.AddSingleton(_ => new CosmosClient(Configuration["Cosmos:ConnectionString"]
+        //     .Replace("{COSMOS_DB_KEY}",
+        //         Environment.GetEnvironmentVariable(EnvironmentConstants.Cosmos))));
 
         services.AddTransient<IDocumentService, DocumentService>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddSingleton<AppSettings, AppSettings>(_ => new AppSettings
         {
             SendGridAccessKey = Environment.GetEnvironmentVariable(EnvironmentConstants.SendGrid) ?? string.Empty,
-            BlobStorageConnectionString = Configuration["Blob:ConnectionString"].Replace("{BLOB_KEY}",
-                Environment.GetEnvironmentVariable(EnvironmentConstants.Blob)),
-            CosmosConnectionString = Configuration["Cosmos:ConnectionString"].Replace("{COSMOS_DB_KEY}",
-                Environment.GetEnvironmentVariable(EnvironmentConstants.Cosmos)),
+            BlobStorageConnectionString = Configuration["Blob:ConnectionString"],
+            CosmosConnectionString = Configuration["Cosmos:ConnectionString"],
             FromEmail = Configuration["Sender:Email"]
         });
     }

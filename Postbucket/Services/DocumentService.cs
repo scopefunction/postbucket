@@ -36,16 +36,16 @@ public class GenericEntity : ITableEntity
 
 public class DocumentService : IDocumentService
 {
-    private readonly CosmosClient _cosmosClient;
+    // private readonly CosmosClient _cosmosClient;
     private readonly ILogger<DocumentService> _logger;
     private readonly AppSettings _appSettings;
 
     public DocumentService(
-        CosmosClient cosmosClient, 
+        // CosmosClient cosmosClient, 
         ILogger<DocumentService> logger, 
         AppSettings appSettings)
     {
-        _cosmosClient = cosmosClient;
+        // _cosmosClient = cosmosClient;
         _logger = logger;
         _appSettings = appSettings;
     }
@@ -78,7 +78,7 @@ public class DocumentService : IDocumentService
         try
         {
             var tableClient = GetOrCreateTableClient("forms");
-            var entity = tableClient.GetEntity<GenericEntity>(formId, formId);
+            var entity = await tableClient.GetEntityAsync<GenericEntity>(formId, formId);
 
             if (!entity.HasValue)
             {
